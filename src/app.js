@@ -90,6 +90,29 @@ app.put('/tasks/:id', (req, res) => {
     });
 });
 
+// PATCH /tasks/:id/toggle - Toggle task completion status
+app.patch('/tasks/:id/toggle', (req, res) => {
+    const taskIndex = tasks.findIndex(t => t.id === req.params.id);
+
+    if (taskIndex === -1) {
+        return res.status(404).json({
+            success: false,
+            error: 'Task not found'
+        });
+    }
+
+    tasks[taskIndex] = {
+        ...tasks[taskIndex],
+        completed: !tasks[taskIndex].completed,
+        updatedAt: new Date().toISOString()
+    };
+
+    res.status(200).json({
+        success: true,
+        data: tasks[taskIndex]
+    });
+});
+
 // DELETE /tasks/:id - Delete a task
 app.delete('/tasks/:id', (req, res) => {
     const taskIndex = tasks.findIndex(t => t.id === req.params.id);
